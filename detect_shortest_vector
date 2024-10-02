@@ -1,0 +1,43 @@
+import numpy as np
+
+# Generate a random 2x2 generator matrix G
+def generate_lattice_matrix():
+    return np.random.randint(-10, 10, (2, 2))
+
+# Enumerate lattice points for a given range
+def enumerate_lattice_points(G, z_min=-10, z_max=10):
+    lattice_points = []
+    for z1 in range(z_min, z_max + 1):
+        for z2 in range(z_min, z_max + 1):
+            # Compute the lattice point: z1*v1 + z2*v2
+            point = z1 * G[0] + z2 * G[1]
+            # Avoid the origin (0, 0)
+            if not np.array_equal(point, [0, 0]):
+                lattice_points.append(point)
+    return np.array(lattice_points)
+
+# Calculate the Euclidean norm (distance from the origin)
+def euclidean_norm(point):
+    return np.linalg.norm(point)
+
+# Find the shortest vectors in the lattice
+def find_shortest_vectors(lattice_points, num_points=5):
+    # Sort points based on their distance from the origin
+    distances = [(point, euclidean_norm(point)) for point in lattice_points]
+    distances.sort(key=lambda x: x[1])
+    # Return the closest `num_points` points
+    return [point for point, dist in distances[:num_points]]
+
+# Main program
+def main():
+    G = generate_lattice_matrix()
+    print("Generated lattice matrix G:\n", G)
+
+    lattice_points = enumerate_lattice_points(G)
+    print("\nLattice points (excluding origin):\n", lattice_points)
+
+    shortest_vectors = find_shortest_vectors(lattice_points)
+    print("\nShortest vectors in the lattice:\n", shortest_vectors)
+
+if __name__ == "__main__":
+    main()
